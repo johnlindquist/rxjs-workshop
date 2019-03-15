@@ -1,16 +1,25 @@
 let consumer1 = {
+  done: false,
   update(value) {
-    console.log("Consumer 1", value)
+    if (!this.done) {
+      console.log("Consumer 1", value)
+    }
   }
 }
 let consumer2 = {
+  done: false,
   update(value) {
-    console.log("Consumer 2", value)
+    if (!this.done) {
+      console.log("Consumer 2", value)
+    }
   }
 }
 let consumer3 = {
+  done: false,
   update(value) {
-    console.log("Consumer 3", value)
+    if (!this.done) {
+      console.log("Consumer 3", value)
+    }
   }
 }
 
@@ -24,6 +33,11 @@ let producer = {
   update(value) {
     this.consumers.forEach(consumer => {
       consumer.update(value)
+    })
+  },
+  done() {
+    this.consumers.forEach(consumer => {
+      consumer.done = true
     })
   }
 }
