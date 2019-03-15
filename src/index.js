@@ -1,49 +1,52 @@
 let consumer1 = {
-  done: false,
   update(value) {
     if (!this.done) {
       console.log("Consumer 1", value)
     }
   }
 }
+
 let consumer2 = {
-  done: false,
   update(value) {
     if (!this.done) {
       console.log("Consumer 2", value)
     }
   }
 }
-let consumer3 = {
-  done: false,
-  update(value) {
-    if (!this.done) {
-      console.log("Consumer 3", value)
+
+function connect(consumer) {
+  return {
+    done: false,
+    update(value) {
+      if (!this.done) {
+        consumer.update(value)
+      }
     }
   }
 }
 
 let producer = {
-  consumers: [],
+  connections: [],
 
   addConsumer(consumer) {
-    this.consumers.push(consumer)
+    this.connections.push(connect(consumer))
   },
 
   update(value) {
-    this.consumers.forEach(consumer => {
-      consumer.update(value)
+    this.connections.forEach(connection => {
+      connection.update(value)
     })
   },
   done() {
-    this.consumers.forEach(consumer => {
-      consumer.done = true
+    this.connections.forEach(connection => {
+      connection.done = true
     })
   }
 }
 
 producer.addConsumer(consumer1)
 producer.addConsumer(consumer2)
-producer.addConsumer(consumer3)
 
 producer.update("John")
+producer.done()
+producer.update("Mindy")
